@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0D0D1A">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Superman — Martin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0D0D1A;
+  --bg2: #141425;
+  --bg3: #1C1C32;
+  --card: #1A1A2E;
+  --border: rgba(255,255,255,0.08);
+  --red: #E03131;
+  --red2: #FF4444;
+  --gold: #F0A500;
+  --blue: #4A90E2;
+  --green: #2ECC71;
+  --purple: #8E44AD;
+  --text: #F0F0F0;
+  --text2: #A0A0B8;
+  --text3: #606070;
+  --accent: #E03131;
+  --push: #2A1A10;
+  --pull: #0D1E2A;
+  --legs: #0D2010;
+  --full: #1A102A;
+  --rec: #0D2018;
+  --rest: #1A1A1A;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Barlow', sans-serif; overflow: hidden; }
+
+/* ── APP SHELL ── */
+#app { display: flex; flex-direction: column; height: 100dvh; max-width: 430px; margin: 0 auto; }
+
+/* ── HEADER ── */
+.header { padding: 16px 20px 12px; background: var(--bg); border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.logo { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 22px; letter-spacing: 2px; color: var(--text); }
+.logo span { color: var(--red); }
+.subtitle { font-size: 12px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; }
+
+/* ── NAV TABS ── */
+.tabs { display: flex; gap: 4px; padding: 10px 16px; background: var(--bg); overflow-x: auto; scrollbar-width: none; flex-shrink: 0; border-bottom: 1px solid var(--border); }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { flex-shrink: 0; padding: 6px 14px; border-radius: 20px; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 13px; letter-spacing: 0.5px; cursor: pointer; border: 1px solid transparent; transition: all 0.15s; color: var(--text2); background: var(--bg3); }
+.tab.active { color: #fff; border-color: transparent; }
+.tab[data-day="0"].active { background: #6B1A1A; color: #FFB3B3; }
+.tab[data-day="1"].active { background: #0D2A3A; color: #A8D4F0; }
+.tab[data-day="2"].active { background: #0D2A1A; color: #A8F0C8; }
+.tab[data-day="3"].active { background: #1A2A0D; color: #C8F0A8; }
+.tab[data-day="4"].active { background: #2A1A00; color: #F0D0A8; }
+.tab[data-day="5"].active { background: #1A0D2A; color: #D0A8F0; }
+.tab[data-day="6"].active { background: #2A2A2A; color: #C0C0C0; }
+.tab[data-day="7"].active { background: #1A1A2A; color: var(--gold); }
+
+/* ── CONTENT ── */
+.content { flex: 1; overflow-y: auto; padding: 16px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── DAY HEADER ── */
+.day-hero { border-radius: 14px; padding: 20px; margin-bottom: 16px; position: relative; overflow: hidden; }
+.day-hero::before { content: ''; position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; border-radius: 50%; opacity: 0.06; }
+.day-hero.push { background: linear-gradient(135deg, #2A1A10 0%, #1A0D08 100%); border: 1px solid #5C2A1A; }
+.day-hero.push::before { background: var(--red); }
+.day-hero.pull { background: linear-gradient(135deg, #0D1E2A 0%, #080E14 100%); border: 1px solid #1A4A6A; }
+.day-hero.pull::before { background: var(--blue); }
+.day-hero.legs { background: linear-gradient(135deg, #0D2010 0%, #081408 100%); border: 1px solid #1A5A2A; }
+.day-hero.legs::before { background: var(--green); }
+.day-hero.full { background: linear-gradient(135deg, #1A102A 0%, #0E0814 100%); border: 1px solid #4A2A7A; }
+.day-hero.full::before { background: var(--purple); }
+.day-hero.rec { background: linear-gradient(135deg, #0D2018 0%, #08140E 100%); border: 1px solid #1A5A40; }
+.day-hero.rec::before { background: #2ECC71; }
+.day-hero.rest { background: var(--bg3); border: 1px solid var(--border); }
+.hero-tag { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+.hero-day { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 32px; letter-spacing: 2px; line-height: 1; margin-bottom: 6px; }
+.hero-focus { font-size: 15px; font-weight: 500; color: var(--text2); margin-bottom: 8px; }
+.hero-work { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 4px 10px; border-radius: 10px; background: rgba(255,255,255,0.07); color: var(--text2); }
+.macro-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; padding: 10px; background: rgba(0,0,0,0.25); border-radius: 10px; margin-top: 12px; }
+.macro-item { text-align: center; }
+.macro-val { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 17px; }
+.macro-lbl { font-size: 9px; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text3); margin-top: 1px; }
+.macro-val.p { color: #6DB3E8; }
+.macro-val.g { color: #E8A83A; }
+.macro-val.l { color: #5CBF7A; }
+.macro-val.k { color: var(--gold); }
+
+/* ── SECTION ── */
+.section { margin-bottom: 20px; }
+.sec-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--text3); margin-bottom: 10px; padding-left: 4px; }
+
+/* ── TIMELINE ── */
+.tl-item { display: flex; gap: 12px; margin-bottom: 8px; }
+.tl-time { width: 44px; flex-shrink: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 13px; color: var(--text3); padding-top: 3px; text-align: right; }
+.tl-dot-col { display: flex; flex-direction: column; align-items: center; gap: 0; width: 20px; flex-shrink: 0; }
+.tl-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.tl-line { width: 1px; flex: 1; background: var(--border); min-height: 16px; }
+.tl-body { flex: 1; padding-bottom: 8px; }
+.tl-title { font-weight: 600; font-size: 14px; color: var(--text); line-height: 1.3; }
+.tl-detail { font-size: 12px; color: var(--text2); margin-top: 3px; line-height: 1.5; }
+.tl-macros { display: inline-flex; gap: 8px; margin-top: 5px; padding: 4px 8px; background: rgba(255,255,255,0.04); border-radius: 6px; }
+.tl-macros span { font-size: 11px; font-weight: 600; }
+.sp { color: #6DB3E8; } .sg { color: #E8A83A; } .sl { color: #5CBF7A; } .sk { color: var(--gold); }
+
+/* ── WORKOUT BLOCK ── */
+.workout-card { background: var(--card); border-radius: 12px; padding: 14px; border: 1px solid var(--border); margin-bottom: 8px; }
+.workout-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 1px; margin-bottom: 10px; }
+.exercise-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); }
+.exercise-row:last-child { border-bottom: none; }
+.ex-name { flex: 1; font-size: 13px; font-weight: 500; color: var(--text); }
+.ex-sets { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px; padding: 3px 8px; border-radius: 6px; background: rgba(255,255,255,0.06); color: var(--gold); white-space: nowrap; }
+.circuit-badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 6px; margin-bottom: 8px; letter-spacing: 0.5px; }
+
+/* ── MACROS PAGE ── */
+.macro-card { background: var(--card); border-radius: 14px; padding: 18px; border: 1px solid var(--border); margin-bottom: 12px; }
+.macro-big-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mbig { background: var(--bg3); border-radius: 10px; padding: 14px; text-align: center; }
+.mbig-val { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 28px; }
+.mbig-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); margin-top: 2px; }
+.mbig-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.bar-wrap { margin: 12px 0; }
+.bar-track { height: 8px; border-radius: 4px; background: var(--bg3); overflow: hidden; display: flex; }
+.bar-seg { height: 100%; }
+.meal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.meal-table th { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--text3); padding: 6px 4px; text-align: left; border-bottom: 1px solid var(--border); }
+.meal-table th:not(:first-child) { text-align: center; }
+.meal-table td { padding: 8px 4px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text2); vertical-align: middle; }
+.meal-table td:not(:first-child) { text-align: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 13px; }
+.meal-table tr:last-child td { border-bottom: none; color: var(--text); }
+.meal-table .tot td { border-top: 1px solid var(--border); color: var(--green); font-weight: 600; }
+.pill { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+
+/* ── BOTTOM NAV ── */
+.bottom-nav { display: flex; background: var(--bg2); border-top: 1px solid var(--border); flex-shrink: 0; }
+.bnav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 4px 14px; cursor: pointer; color: var(--text3); transition: color 0.15s; border: none; background: none; font-family: 'Barlow', sans-serif; }
+.bnav-btn.active { color: var(--red); }
+.bnav-btn svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.bnav-label { font-size: 10px; font-weight: 500; margin-top: 3px; letter-spacing: 0.3px; }
+
+/* ── MISC ── */
+.chip { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 500; margin: 3px; border: 1px solid var(--border); background: var(--bg3); color: var(--text2); }
+.supp-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.supp-row:last-child { border-bottom: none; }
+.supp-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.supp-name { font-size: 14px; font-weight: 500; flex: 1; }
+.supp-dose { font-size: 12px; color: var(--text3); }
+.tip-box { background: rgba(240,165,0,0.08); border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0; padding: 10px 14px; margin-top: 10px; }
+.tip-box p { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+/* ── TIMER ── */
+.timer-fab { position: fixed; bottom: 80px; right: 20px; width: 52px; height: 52px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; box-shadow: 0 4px 20px rgba(224,49,49,0.4); transition: transform 0.15s; z-index: 100; }
+.timer-fab:active { transform: scale(0.92); }
+.timer-fab svg { width: 22px; height: 22px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; }
+.timer-panel { position: fixed; bottom: 80px; right: 16px; left: 16px; background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 20px; z-index: 99; display: none; box-shadow: 0 -4px 40px rgba(0,0,0,0.5); }
+.timer-panel.open { display: block; }
+.timer-display { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 56px; text-align: center; letter-spacing: 4px; line-height: 1; margin-bottom: 16px; }
+.timer-btns { display: flex; gap: 8px; }
+.timer-btns button { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg3); color: var(--text); font-family: 'Barlow', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; }
+.timer-btns button.primary { background: var(--red); border-color: var(--red); color: white; }
+.preset-row { display: flex; gap: 6px; margin-bottom: 14px; justify-content: center; }
+.preset-btn { padding: 5px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg3); color: var(--text2); font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Barlow', sans-serif; }
+.preset-btn.active { border-color: var(--red); color: var(--red2); }
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div class="logo">SUPERMAN<span>.</span></div>
+      <div id="today-badge" style="font-size:12px;color:var(--text3);font-weight:500;"></div>
+    </div>
+    <div class="subtitle">Programme de Martin — 80 kg</div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs" id="tabs">
+    <div class="tab" data-day="0">Lun</div>
+    <div class="tab" data-day="1">Mar</div>
+    <div class="tab" data-day="2">Mer</div>
+    <div class="tab" data-day="3">Jeu</div>
+    <div class="tab" data-day="4">Ven</div>
+    <div class="tab" data-day="5">Sam</div>
+    <div class="tab" data-day="6">Dim</div>
+    <div class="tab" data-day="7">Macros</div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- LUNDI -->
+    <div class="page" id="page-0">
+      <div class="day-hero push">
+        <div class="hero-tag" style="color:#E87070">Push</div>
+        <div class="hero-day">LUNDI</div>
+        <div class="hero-focus">Poitrine &amp; Épaules</div>
+        <div class="hero-work">&#9200; Travail 15h – 23h</div>
+        <div class="macro-strip">
+          <div class="macro-item"><div class="macro-val p">176g</div><div class="macro-lbl">Prot</div></div>
+          <div class="macro-item"><div class="macro-val g">486g</div><div class="macro-lbl">Gluc</div></div>
+          <div class="macro-item"><div class="macro-val l">88g</div><div class="macro-lbl">Lip</div></div>
+          <div class="macro-item"><div class="macro-val k">3 439</div><div class="macro-lbl">kcal</div></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="sec-title">Horaire &amp; Repas</div>
+        <div class="tl-item">
+          <div class="tl-time">7h30</div>
+          <div class="tl-dot-col"><div class="tl-dot" style="background:var(--text3)"></div><div class="tl-line"></div></div>
+          <div class="tl-body"><div class="tl-title">Réveil</div><div class="tl-detail">Eau 500 ml · Café</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">8h00</div>
+          <div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div>
+          <div class="tl-body"><div class="tl-title">Pré-entraînement</div><div class="tl-detail">100g gruau · 1 banane · 1 scoop whey · 1 c.s. beurre arachide</div><div class="tl-macros"><span class="sp">38P</span><span class="sg">80G</span><span class="sl">16L</span><span class="sk">620 kcal</span></div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">8h30</div>
+          <div class="tl-dot-col"><div class="tl-dot" style="background:var(--red)"></div><div class="tl-line"></div></div>
+          <div class="tl-body"><div class="tl-title">Rituel Superman × 3</div><div class="tl-detail">1 km · 20 tractions · 30 pompes · 50 squats</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">9h15</div>
+          <div class="tl-dot-col"><div class="tl-dot" style="background:var(--blue)"></div><div class="tl-line"></div></div>
+          <div class="tl-body"><div class="tl-title">Circuit principal × 4</div><div class="tl-detail">12 dév. couché · 15 dips · 20 pompes · 15 sit-ups · 60s repos</div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">10h30</div>
+          <div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div>
+          <div class="tl-body"><div class="tl-title">Post-entraînement</div><div class="tl-detail">5 œufs · 2 toasts grains entiers · 1 pomme</div><div class="tl-macros"><span class="sp">42P</span><span class="sg">45G</span><span class="sl">18L</span><span class="sk">500 kcal</span></div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">13h00</div>
+          <div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div>
+          <div class="tl-body"><div class="tl-title">Avant travail</div><div class="tl-detail">250g poulet · 250g riz basmati · légumes · 1 c.s. huile olive</div><div class="tl-macros"><span class="sp">55P</span><span class="sg">90G</span><span class="sl">14L</span><span class="sk">750 kcal</span></div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">17h00</div>
+          <div class="tl-dot-col"><div class="tl-dot" style="background:var(--blue)"></div><div class="tl-line"></div></div>
+          <div class="tl-body"><div class="tl-title">Pause travail</div><div class="tl-detail">175g yogourt grec · 60g avoine · bleuets</div><div class="tl-macros"><span class="sp">24P</span><span class="sg">48G</span><span class="sl">5L</span><span class="sk">350 kcal</span></div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">20h00</div>
+          <div class="tl-dot-col"><div class="tl-dot" style="background:var(--blue)"></div><div class="tl-line"></div></div>
+          <div class="tl-body"><div class="tl-title">2e pause</div><div class="tl-detail">1 wrap blé entier · 120g poulet · 80g riz</div><div class="tl-macros"><span class="sp">35P</span><span class="sg">58G</span><span class="sl">8L</span><span class="sk">450 kcal</span></div></div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-time">23h45</div>
+          <div class="tl-dot-col"><div class="tl-dot" style="background:var(--text3)"></div><div class="tl-line" style="display:none"></div></div>
+          <div class="tl-body"><div class="tl-title">Retour maison</div><div class="tl-detail">200g cottage cheese · 15g amandes · 1 kiwi</div><div class="tl-macros"><span class="sp">27P</span><span class="sg">22G</span><span class="sl">8L</span><span class="sk">280 kcal</span></div></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="sec-title">Entraînement force</div>
+        <div class="workout-card">
+          <div class="workout-title" style="color:var(--red)">FORCE / HYPERTROPHIE</div>
+          <div class="exercise-row"><div class="ex-name">Développé couché</div><div class="ex-sets">5 × 5 lourd</div></div>
+          <div class="exercise-row"><div class="ex-name">Développé incliné haltères</div><div class="ex-sets">4 × 10</div></div>
+          <div class="exercise-row"><div class="ex-name">Développé Arnold</div><div class="ex-sets">4 × 12</div></div>
+          <div class="exercise-row"><div class="ex-name">Pompes lestées</div><div class="ex-sets">3 × max</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MARDI -->
+    <div class="page" id="page-1">
+      <div class="day-hero pull">
+        <div class="hero-tag" style="color:#70A8E8">Pull</div>
+        <div class="hero-day">MARDI</div>
+        <div class="hero-focus">Dos &amp; Tirage</div>
+        <div class="macro-strip">
+          <div class="macro-item"><div class="macro-val p">176g</div><div class="macro-lbl">Prot</div></div>
+          <div class="macro-item"><div class="macro-val g">486g</div><div class="macro-lbl">Gluc</div></div>
+          <div class="macro-item"><div class="macro-val l">88g</div><div class="macro-lbl">Lip</div></div>
+          <div class="macro-item"><div class="macro-val k">3 439</div><div class="macro-lbl">kcal</div></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="sec-title">Horaire &amp; Repas</div>
+        <div class="tl-item"><div class="tl-time">7h30</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Déjeuner</div><div class="tl-detail">4 œufs · 80g gruau · 1 banane · 1 c.s. beurre arachide</div><div class="tl-macros"><span class="sp">36P</span><span class="sg">72G</span><span class="sl">16L</span><span class="sk">580 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">8h30</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--red)"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Rituel matinal × 2</div><div class="tl-detail">1 km · 20 tractions · 30 pompes · 50 squats</div></div></div>
+        <div class="tl-item"><div class="tl-time">9h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--blue)"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Circuit Dos × 4</div><div class="tl-detail">15 tractions · 20 rowing · 20 australiennes · 15 hyperext · 500m rameur</div></div></div>
+        <div class="tl-item"><div class="tl-time">10h30</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Collation</div><div class="tl-detail">175g yogourt grec · 60g avoine · 1 banane</div><div class="tl-macros"><span class="sp">25P</span><span class="sg">58G</span><span class="sl">5L</span><span class="sk">380 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">13h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Dîner</div><div class="tl-detail">200g steak haché extra-maigre · 200g pommes de terre · 200g brocoli · huile olive</div><div class="tl-macros"><span class="sp">48P</span><span class="sg">55G</span><span class="sl">20L</span><span class="sk">700 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">16h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--blue)"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Pré léger</div><div class="tl-detail">1 banane · 1 scoop whey</div><div class="tl-macros"><span class="sp">28P</span><span class="sg">30G</span><span class="sl">2L</span><span class="sk">250 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">18h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Souper</div><div class="tl-detail">200g poulet · 200g riz · légumes vapeur</div><div class="tl-macros"><span class="sp">48P</span><span class="sg">70G</span><span class="sl">8L</span><span class="sk">600 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">21h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--text3)"></div><div class="tl-line" style="display:none"></div></div><div class="tl-body"><div class="tl-title">Soir</div><div class="tl-detail">200g cottage cheese · 20g noix</div><div class="tl-macros"><span class="sp">26P</span><span class="sg">12G</span><span class="sl">14L</span><span class="sk">280 kcal</span></div></div></div>
+      </div>
+      <div class="section">
+        <div class="sec-title">Entraînement force</div>
+        <div class="workout-card">
+          <div class="workout-title" style="color:var(--blue)">FORCE DOS</div>
+          <div class="exercise-row"><div class="ex-name">Deadlift</div><div class="ex-sets">5 × 5</div></div>
+          <div class="exercise-row"><div class="ex-name">Tractions lestées</div><div class="ex-sets">4 × 6–8</div></div>
+          <div class="exercise-row"><div class="ex-name">Rowing barre</div><div class="ex-sets">4 × 10</div></div>
+          <div class="exercise-row"><div class="ex-name">Farmer walk</div><div class="ex-sets">4 longueurs</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MERCREDI -->
+    <div class="page" id="page-2">
+      <div class="day-hero rec">
+        <div class="hero-tag" style="color:#70E8B0">Recovery</div>
+        <div class="hero-day">MERCREDI</div>
+        <div class="hero-focus">Mobilité &amp; Récupération</div>
+        <div class="hero-work">&#9200; Travail 7h – 16h</div>
+        <div class="macro-strip">
+          <div class="macro-item"><div class="macro-val p">170g</div><div class="macro-lbl">Prot</div></div>
+          <div class="macro-item"><div class="macro-val g">400g</div><div class="macro-lbl">Gluc</div></div>
+          <div class="macro-item"><div class="macro-val l">85g</div><div class="macro-lbl">Lip</div></div>
+          <div class="macro-item"><div class="macro-val k">3 100</div><div class="macro-lbl">kcal</div></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="sec-title">Horaire &amp; Repas</div>
+        <div class="tl-item"><div class="tl-time">5h15</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Déjeuner rapide</div><div class="tl-detail">80g avoine + 1 scoop whey + 1 banane (overnight oats)</div><div class="tl-macros"><span class="sp">38P</span><span class="sg">68G</span><span class="sl">7L</span><span class="sk">480 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">9h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--blue)"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Pause travail</div><div class="tl-detail">175g yogourt grec · 1 pomme</div><div class="tl-macros"><span class="sp">18P</span><span class="sg">25G</span><span class="sl">4L</span><span class="sk">220 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">12h30</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Dîner travail</div><div class="tl-detail">200g poulet curry · 180g riz · légumes verts</div><div class="tl-macros"><span class="sp">48P</span><span class="sg">80G</span><span class="sl">12L</span><span class="sk">650 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">16h30</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--blue)"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Shake après travail</div><div class="tl-detail">1 scoop whey · 60g avoine · 300ml lait 2% · 1 c.s. beurre arachide</div><div class="tl-macros"><span class="sp">40P</span><span class="sg">60G</span><span class="sl">14L</span><span class="sk">500 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">17h30</div><div class="tl-dot-col"><div class="tl-dot" style="background:#2ECC71"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Recovery 30–45 min</div><div class="tl-detail">Marche inclinée · mobilité · étirements · foam roller · abdos légers</div></div></div>
+        <div class="tl-item"><div class="tl-time">19h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Souper</div><div class="tl-detail">180g saumon · 250g pommes de terre · légumes verts</div><div class="tl-macros"><span class="sp">42P</span><span class="sg">55G</span><span class="sl">20L</span><span class="sk">620 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">21h30</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--text3)"></div><div class="tl-line" style="display:none"></div></div><div class="tl-body"><div class="tl-title">Avant coucher</div><div class="tl-detail">200g cottage cheese 2%</div><div class="tl-macros"><span class="sp">24P</span><span class="sg">8G</span><span class="sl">4L</span><span class="sk">170 kcal</span></div></div></div>
+      </div>
+    </div>
+
+    <!-- JEUDI -->
+    <div class="page" id="page-3">
+      <div class="day-hero legs">
+        <div class="hero-tag" style="color:#80E890">Jambes</div>
+        <div class="hero-day">JEUDI</div>
+        <div class="hero-focus">Quad · Ischio · Mollets</div>
+        <div class="hero-work">&#9200; Travail 15h – 23h</div>
+        <div class="macro-strip">
+          <div class="macro-item"><div class="macro-val p">176g</div><div class="macro-lbl">Prot</div></div>
+          <div class="macro-item"><div class="macro-val g">486g</div><div class="macro-lbl">Gluc</div></div>
+          <div class="macro-item"><div class="macro-val l">88g</div><div class="macro-lbl">Lip</div></div>
+          <div class="macro-item"><div class="macro-val k">3 439</div><div class="macro-lbl">kcal</div></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="sec-title">Horaire &amp; Repas</div>
+        <div class="tl-item"><div class="tl-time">7h30</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--text3)"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Réveil</div><div class="tl-detail">Eau 500 ml · Café</div></div></div>
+        <div class="tl-item"><div class="tl-time">8h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Pré-training</div><div class="tl-detail">100g gruau · 1 banane · 1 scoop whey</div><div class="tl-macros"><span class="sp">36P</span><span class="sg">78G</span><span class="sl">8L</span><span class="sk">540 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">8h30</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--red)"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Rituel matinal × 2</div><div class="tl-detail">1 km · 20 tractions · 30 pompes · 50 squats</div></div></div>
+        <div class="tl-item"><div class="tl-time">9h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Circuit jambes × 4</div><div class="tl-detail">15 goblet squats · 20 KB swings · 15 box jumps · 20 lunges · 400m</div></div></div>
+        <div class="tl-item"><div class="tl-time">10h30</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Post-training</div><div class="tl-detail">5 œufs + fromage léger 30g + épinards · 1 toast grains entiers</div><div class="tl-macros"><span class="sp">42P</span><span class="sg">25G</span><span class="sl">22L</span><span class="sk">500 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">13h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Avant travail</div><div class="tl-detail">220g poulet · 200g riz · légumes vapeur · huile olive</div><div class="tl-macros"><span class="sp">52P</span><span class="sg">82G</span><span class="sl">14L</span><span class="sk">700 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">17h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--blue)"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Collation travail</div><div class="tl-detail">175g yogourt grec · 20g noix</div><div class="tl-macros"><span class="sp">20P</span><span class="sg">12G</span><span class="sl">10L</span><span class="sk">260 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">20h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--blue)"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Pause</div><div class="tl-detail">1 wrap · 120g poulet · 80g riz · légumes</div><div class="tl-macros"><span class="sp">35P</span><span class="sg">56G</span><span class="sl">8L</span><span class="sk">450 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">23h30</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--text3)"></div><div class="tl-line" style="display:none"></div></div><div class="tl-body"><div class="tl-title">Retour maison</div><div class="tl-detail">200g cottage cheese · 1 c.s. beurre arachide</div><div class="tl-macros"><span class="sp">28P</span><span class="sg">12G</span><span class="sl">12L</span><span class="sk">280 kcal</span></div></div></div>
+      </div>
+      <div class="section">
+        <div class="sec-title">Entraînement force</div>
+        <div class="workout-card">
+          <div class="workout-title" style="color:var(--green)">FORCE JAMBES</div>
+          <div class="exercise-row"><div class="ex-name">Squat</div><div class="ex-sets">5 × 5</div></div>
+          <div class="exercise-row"><div class="ex-name">Romanian Deadlift</div><div class="ex-sets">4 × 10</div></div>
+          <div class="exercise-row"><div class="ex-name">Bulgarian Split Squat</div><div class="ex-sets">4 × 10/jambe</div></div>
+          <div class="exercise-row"><div class="ex-name">Mollets</div><div class="ex-sets">5 × 15–20</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VENDREDI -->
+    <div class="page" id="page-4">
+      <div class="day-hero full">
+        <div class="hero-tag" style="color:#C090E8">Full Body</div>
+        <div class="hero-day">VENDREDI</div>
+        <div class="hero-focus">Haut du corps complet</div>
+        <div class="hero-work">&#9200; Travail 15h – 23h</div>
+        <div class="macro-strip">
+          <div class="macro-item"><div class="macro-val p">176g</div><div class="macro-lbl">Prot</div></div>
+          <div class="macro-item"><div class="macro-val g">486g</div><div class="macro-lbl">Gluc</div></div>
+          <div class="macro-item"><div class="macro-val l">88g</div><div class="macro-lbl">Lip</div></div>
+          <div class="macro-item"><div class="macro-val k">3 439</div><div class="macro-lbl">kcal</div></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="sec-title">Horaire &amp; Repas</div>
+        <div class="tl-item"><div class="tl-time">8h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Déjeuner</div><div class="tl-detail">Pancakes protéinés : 80g avoine + 3 œufs + 1 scoop whey</div><div class="tl-macros"><span class="sp">44P</span><span class="sg">68G</span><span class="sl">12L</span><span class="sk">580 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">8h30</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--blue)"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Circuit #1 × 4</div><div class="tl-detail">15 australiennes · 20 pompes élastiques · 15 dév. militaire · 20 abdos barre</div></div></div>
+        <div class="tl-item"><div class="tl-time">9h15</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--red)"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Circuit #2 × 3 rapides</div><div class="tl-detail">10 bench · 10 rowing barre · 10 burpees · 10 tractions</div></div></div>
+        <div class="tl-item"><div class="tl-time">9h45</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--purple)"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Accessoires</div><div class="tl-detail">Élévations latérales · curls · triceps · face pulls</div></div></div>
+        <div class="tl-item"><div class="tl-time">10h15</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Post-entraînement</div><div class="tl-detail">1 scoop whey · 1 banane · 1 verre lait</div><div class="tl-macros"><span class="sp">36P</span><span class="sg">50G</span><span class="sl">5L</span><span class="sk">380 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">13h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Avant travail</div><div class="tl-detail">200g steak haché extra-maigre · 200g riz · légumes grillés</div><div class="tl-macros"><span class="sp">48P</span><span class="sg">68G</span><span class="sl">18L</span><span class="sk">680 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">17–20h</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--blue)"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Pauses travail</div><div class="tl-detail">175g yogourt grec · sandwich poulet (2 tranches + 120g poulet) · 1 fruit</div><div class="tl-macros"><span class="sp">48P</span><span class="sg">78G</span><span class="sl">12L</span><span class="sk">650 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">23h45</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--text3)"></div><div class="tl-line" style="display:none"></div></div><div class="tl-body"><div class="tl-title">Retour maison</div><div class="tl-detail">200g cottage cheese · 1 kiwi</div><div class="tl-macros"><span class="sp">25P</span><span class="sg">16G</span><span class="sl">4L</span><span class="sk">220 kcal</span></div></div></div>
+      </div>
+    </div>
+
+    <!-- SAMEDI -->
+    <div class="page" id="page-5">
+      <div class="day-hero push" style="background:linear-gradient(135deg,#1A0A0A,#0E0808);border-color:#6B2020">
+        <div class="hero-tag" style="color:var(--gold)">Full Body Superman</div>
+        <div class="hero-day">SAMEDI</div>
+        <div class="hero-focus">Séance maximale</div>
+        <div class="macro-strip">
+          <div class="macro-item"><div class="macro-val p">180g</div><div class="macro-lbl">Prot</div></div>
+          <div class="macro-item"><div class="macro-val g">520g</div><div class="macro-lbl">Gluc</div></div>
+          <div class="macro-item"><div class="macro-val l">90g</div><div class="macro-lbl">Lip</div></div>
+          <div class="macro-item"><div class="macro-val k">3 600</div><div class="macro-lbl">kcal</div></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="sec-title">Horaire &amp; Repas</div>
+        <div class="tl-item"><div class="tl-time">8h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Déjeuner</div><div class="tl-detail">5 œufs · 100g gruau · 1 banane · 1 c.s. beurre arachide</div><div class="tl-macros"><span class="sp">44P</span><span class="sg">80G</span><span class="sl">22L</span><span class="sk">680 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">9h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--red)"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Circuit 9 min</div><div class="tl-detail">Boucle : 3 squats · 6 tractions · 9 pompes</div></div></div>
+        <div class="tl-item"><div class="tl-time">9h15</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--gold)"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Full body lourd</div><div class="tl-detail">Deadlift · Bench · Row · Fentes · Épaules</div></div></div>
+        <div class="tl-item"><div class="tl-time">10h15</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--red)"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Finisher</div><div class="tl-detail">Sled push OU assault bike · 10–15 min HIIT</div></div></div>
+        <div class="tl-item"><div class="tl-time">10h45</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Shake gainer</div><div class="tl-detail">1 scoop whey · 80g avoine · 300ml lait 2% · 1 banane · 1 c.s. beurre arachide</div><div class="tl-macros"><span class="sp">46P</span><span class="sg">90G</span><span class="sl">16L</span><span class="sk">680 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">13h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Dîner</div><div class="tl-detail">250g poulet curry · 220g riz · légumes</div><div class="tl-macros"><span class="sp">55P</span><span class="sg">95G</span><span class="sl">14L</span><span class="sk">750 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">18h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Souper</div><div class="tl-detail">220g steak · 250g pommes de terre · salade · huile olive</div><div class="tl-macros"><span class="sp">52P</span><span class="sg">58G</span><span class="sl">22L</span><span class="sk">720 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">21h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--text3)"></div><div class="tl-line" style="display:none"></div></div><div class="tl-body"><div class="tl-title">Soir</div><div class="tl-detail">175g yogourt grec · 15g amandes</div><div class="tl-macros"><span class="sp">20P</span><span class="sg">14G</span><span class="sl">10L</span><span class="sk">240 kcal</span></div></div></div>
+      </div>
+    </div>
+
+    <!-- DIMANCHE -->
+    <div class="page" id="page-6">
+      <div class="day-hero rest">
+        <div class="hero-tag" style="color:var(--text3)">Repos actif</div>
+        <div class="hero-day">DIMANCHE</div>
+        <div class="hero-focus">Récupération &amp; Meal Prep</div>
+        <div class="macro-strip">
+          <div class="macro-item"><div class="macro-val p">165g</div><div class="macro-lbl">Prot</div></div>
+          <div class="macro-item"><div class="macro-val g">380g</div><div class="macro-lbl">Gluc</div></div>
+          <div class="macro-item"><div class="macro-val l">80g</div><div class="macro-lbl">Lip</div></div>
+          <div class="macro-item"><div class="macro-val k">2 900</div><div class="macro-lbl">kcal</div></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="sec-title">Horaire &amp; Repas</div>
+        <div class="tl-item"><div class="tl-time">Matin</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Déjeuner</div><div class="tl-detail">Pain doré protéiné : 2 tranches + 3 œufs · 1 tasse fruits</div><div class="tl-macros"><span class="sp">30P</span><span class="sg">52G</span><span class="sl">12L</span><span class="sk">480 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">Journée</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--text3)"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Activité légère</div><div class="tl-detail">Marche longue · mobilité · stretching · sauna optionnel</div></div></div>
+        <div class="tl-item"><div class="tl-time">12h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Dîner</div><div class="tl-detail">Chili maison (200g bœuf + légumineuses + tomates) · 150g riz</div><div class="tl-macros"><span class="sp">48P</span><span class="sg">68G</span><span class="sl">14L</span><span class="sk">650 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">18h00</div><div class="tl-dot-col"><div class="tl-dot" style="background:#5CBF7A"></div><div class="tl-line"></div></div><div class="tl-body"><div class="tl-title">Souper</div><div class="tl-detail">200g poulet · légumes rôtis · 200g pommes de terre</div><div class="tl-macros"><span class="sp">46P</span><span class="sg">60G</span><span class="sl">10L</span><span class="sk">580 kcal</span></div></div></div>
+        <div class="tl-item"><div class="tl-time">Soir</div><div class="tl-dot-col"><div class="tl-dot" style="background:var(--text3)"></div><div class="tl-line" style="display:none"></div></div><div class="tl-body"><div class="tl-title">Avant coucher</div><div class="tl-detail">200g cottage cheese · 1 kiwi</div><div class="tl-macros"><span class="sp">25P</span><span class="sg">16G</span><span class="sl">4L</span><span class="sk">220 kcal</span></div></div></div>
+      </div>
+      <div class="section">
+        <div class="sec-title">Meal Prep — préparer d'avance</div>
+        <div style="display:flex;flex-wrap:wrap;gap:0">
+          <span class="chip">600g poulet cuit</span><span class="chip">400g steak haché</span>
+          <span class="chip">800g riz cuit</span><span class="chip">6 œufs cuits durs</span>
+          <span class="chip">600g pommes de terre</span><span class="chip">3x overnight oats</span>
+          <span class="chip">6 wraps assemblés</span><span class="chip">Légumes coupés</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MACROS PAGE -->
+    <div class="page" id="page-7">
+      <div style="margin-bottom:16px">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:26px;letter-spacing:2px;margin-bottom:4px">MACROS</div>
+        <div style="font-size:13px;color:var(--text3)">80 kg · Prise de masse · Entraînement modéré-intense</div>
+      </div>
+      <div class="macro-card">
+        <div class="macro-big-grid">
+          <div class="mbig"><div class="mbig-val" style="color:#6DB3E8">176 g</div><div class="mbig-lbl">Protéines</div><div class="mbig-sub">2,2 g/kg</div></div>
+          <div class="mbig"><div class="mbig-val" style="color:#E8A83A">486 g</div><div class="mbig-lbl">Glucides</div><div class="mbig-sub">6,1 g/kg</div></div>
+          <div class="mbig"><div class="mbig-val" style="color:#5CBF7A">88 g</div><div class="mbig-lbl">Lipides</div><div class="mbig-sub">1,1 g/kg</div></div>
+          <div class="mbig"><div class="mbig-val" style="color:var(--gold)">3 439</div><div class="mbig-lbl">Calories</div><div class="mbig-sub">+8% TDEE</div></div>
+        </div>
+        <div class="bar-wrap">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:4px">
+            <span>Répartition</span><span style="color:#6DB3E8">20%P</span><span style="color:#E8A83A"> 57%G</span><span style="color:#5CBF7A"> 23%L</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-seg" style="width:20%;background:#6DB3E8"></div>
+            <div class="bar-seg" style="width:57%;background:#E8A83A"></div>
+            <div class="bar-seg" style="width:23%;background:#5CBF7A"></div>
+          </div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="sec-title">Répartition par repas (jour entraînement)</div>
+        <div class="macro-card" style="padding:10px 12px">
+          <table class="meal-table">
+            <thead><tr><th>Repas</th><th>P</th><th>G</th><th>L</th><th>kcal</th></tr></thead>
+            <tbody>
+              <tr><td>Déjeuner pré</td><td>38</td><td>80</td><td>16</td><td>620</td></tr>
+              <tr><td>Post-training</td><td>42</td><td>45</td><td>18</td><td>500</td></tr>
+              <tr><td>Avant travail</td><td>55</td><td>90</td><td>14</td><td>750</td></tr>
+              <tr><td>Pause 17h</td><td>24</td><td>48</td><td>5</td><td>350</td></tr>
+              <tr><td>Pause 20h</td><td>35</td><td>58</td><td>8</td><td>450</td></tr>
+              <tr><td>Retour 23h</td><td>27</td><td>22</td><td>8</td><td>280</td></tr>
+              <tr class="tot"><td><strong>TOTAL</strong></td><td>221</td><td>343</td><td>69</td><td>2 950</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="section">
+        <div class="sec-title">Timing des nutriments</div>
+        <div class="macro-card" style="padding:14px">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div><div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:3px">Avant entraînement</div><div style="font-size:13px;color:var(--text2)">~80g glucides · ~35g protéines <span style="color:var(--text3)">(60 min avant)</span></div></div>
+            <div><div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:3px">Après entraînement</div><div style="font-size:13px;color:var(--text2)">~45g protéines · ~70g glucides <span style="color:var(--text3)">(dans les 30 min)</span></div></div>
+            <div><div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:3px">Avant coucher</div><div style="font-size:13px;color:var(--text2)">Cottage cheese · ~30g prot · ~15g lip <span style="color:var(--text3)">(caséine lente)</span></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="sec-title">Suppléments</div>
+        <div class="macro-card" style="padding:10px 14px">
+          <div class="supp-row"><div class="supp-dot" style="background:#6DB3E8"></div><div class="supp-name">Créatine monohydrate</div><div class="supp-dose">5 g / jour</div></div>
+          <div class="supp-row"><div class="supp-dot" style="background:#5CBF7A"></div><div class="supp-name">Magnésium glycinate</div><div class="supp-dose">300–400 mg / soir</div></div>
+          <div class="supp-row"><div class="supp-dot" style="background:#E8A83A"></div><div class="supp-name">Oméga-3</div><div class="supp-dose">2–3 g EPA+DHA</div></div>
+          <div class="supp-row"><div class="supp-dot" style="background:var(--gold)"></div><div class="supp-name">Vitamine D</div><div class="supp-dose">2 000–4 000 UI</div></div>
+          <div class="supp-row"><div class="supp-dot" style="background:var(--purple)"></div><div class="supp-name">Multivitamines</div><div class="supp-dose">le matin</div></div>
+          <div class="supp-row" style="border:none"><div class="supp-dot" style="background:var(--text3)"></div><div class="supp-name">Whey protéine</div><div class="supp-dose">au besoin</div></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="sec-title">Eau &amp; hydratation</div>
+        <div class="macro-card">
+          <div style="display:flex;gap:12px;align-items:center">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:42px;font-weight:800;color:var(--blue)">4 L</div>
+            <div style="font-size:13px;color:var(--text2);line-height:1.6">minimum par jour<br>+ électrolytes si jiu-jitsu<br>ou grosse transpiration</div>
+          </div>
+        </div>
+      </div>
+      <div style="height:8px"></div>
+    </div>
+
+  </div><!-- end content -->
+
+  <!-- TIMER FAB -->
+  <button class="timer-fab" id="timer-fab" aria-label="Minuterie repos">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+  </button>
+  <div class="timer-panel" id="timer-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;color:var(--text3)">REPOS</div>
+      <button onclick="closeTimer()" style="background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;padding:0 4px">&#x2715;</button>
+    </div>
+    <div class="preset-row">
+      <button class="preset-btn" onclick="setPreset(45)">45s</button>
+      <button class="preset-btn active" onclick="setPreset(60)">60s</button>
+      <button class="preset-btn" onclick="setPreset(90)">90s</button>
+      <button class="preset-btn" onclick="setPreset(120)">2min</button>
+      <button class="preset-btn" onclick="setPreset(180)">3min</button>
+    </div>
+    <div class="timer-display" id="timer-display">01:00</div>
+    <div class="timer-btns">
+      <button onclick="resetTimer()">Reset</button>
+      <button class="primary" id="start-btn" onclick="toggleTimer()">Start</button>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <button class="bnav-btn" id="bn-week" onclick="showSection('week')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span class="bnav-label">Semaine</span>
+    </button>
+    <button class="bnav-btn" id="bn-macros" onclick="showSection('macros')">
+      <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3z" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      <span class="bnav-label">Macros</span>
+    </button>
+    <button class="bnav-btn" id="bn-timer" onclick="toggleTimerPanel()">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><polyline points="12 9 12 13 14 15"/><path d="M5 3l-1 2M19 3l1 2M9 3h6"/></svg>
+      <span class="bnav-label">Timer</span>
+    </button>
+  </div>
+
+</div><!-- end app -->
+
+<script>
+let currentDay = 0;
+let timerSeconds = 60;
+let timerMax = 60;
+let timerRunning = false;
+let timerInterval = null;
+
+// Auto-select today
+const dayMap = {0:6, 1:0, 2:1, 3:2, 4:3, 5:4, 6:5}; // JS Sun=0
+const jsDay = new Date().getDay();
+const days = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+document.getElementById('today-badge').textContent = days[jsDay];
+const autoDay = dayMap[jsDay] !== undefined ? dayMap[jsDay] : 0;
+
+function showDay(d) {
+  currentDay = d;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + d).classList.add('active');
+  document.querySelector('.tab[data-day="' + d + '"]').classList.add('active');
+  document.getElementById('bn-week').classList.add('active');
+  document.getElementById('bn-macros').classList.remove('active');
+  document.querySelector('.content').scrollTop = 0;
+  closeTimer();
+}
+
+function showSection(s) {
+  if (s === 'macros') {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('page-7').classList.add('active');
+    document.querySelector('.tab[data-day="7"]').classList.add('active');
+    document.getElementById('bn-macros').classList.add('active');
+    document.getElementById('bn-week').classList.remove('active');
+    document.querySelector('.content').scrollTop = 0;
+  } else {
+    showDay(currentDay);
+  }
+}
+
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    const d = parseInt(t.dataset.day);
+    if (d === 7) showSection('macros');
+    else showDay(d);
+  });
+});
+
+// Timer
+function toggleTimerPanel() {
+  const panel = document.getElementById('timer-panel');
+  panel.classList.toggle('open');
+  document.getElementById('timer-fab').style.display = panel.classList.contains('open') ? 'none' : 'flex';
+  document.getElementById('bn-timer').classList.toggle('active', panel.classList.contains('open'));
+}
+function closeTimer() {
+  document.getElementById('timer-panel').classList.remove('open');
+  document.getElementById('timer-fab').style.display = 'flex';
+  document.getElementById('bn-timer').classList.remove('active');
+}
+document.getElementById('timer-fab').addEventListener('click', toggleTimerPanel);
+
+function setPreset(s) {
+  stopTimer();
+  timerMax = s; timerSeconds = s;
+  updateDisplay();
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+function pad(n) { return String(n).padStart(2,'0'); }
+function updateDisplay() {
+  const m = Math.floor(timerSeconds / 60);
+  const s = timerSeconds % 60;
+  const el = document.getElementById('timer-display');
+  el.textContent = pad(m) + ':' + pad(s);
+  const pct = timerSeconds / timerMax;
+  el.style.color = pct > 0.5 ? 'var(--text)' : pct > 0.25 ? 'var(--gold)' : 'var(--red2)';
+}
+function toggleTimer() {
+  if (timerRunning) stopTimer();
+  else startTimer();
+}
+function startTimer() {
+  if (timerSeconds <= 0) { timerSeconds = timerMax; updateDisplay(); }
+  timerRunning = true;
+  document.getElementById('start-btn').textContent = 'Pause';
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    updateDisplay();
+    if (timerSeconds <= 0) {
+      stopTimer();
+      document.getElementById('timer-display').textContent = '00:00';
+      document.getElementById('timer-display').style.color = 'var(--green)';
+      setTimeout(() => { timerSeconds = timerMax; updateDisplay(); }, 1500);
+    }
+  }, 1000);
+}
+function stopTimer() {
+  timerRunning = false;
+  clearInterval(timerInterval);
+  document.getElementById('start-btn').textContent = 'Start';
+}
+function resetTimer() {
+  stopTimer();
+  timerSeconds = timerMax;
+  updateDisplay();
+}
+
+// Init
+showDay(autoDay);
+updateDisplay();
+</script>
+</body>
+</html>
