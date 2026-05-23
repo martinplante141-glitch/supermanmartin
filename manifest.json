@@ -1,0 +1,12 @@
+{
+  "name": "Superman — Martin",
+  "short_name": "Superman",
+  "start_url": "/superman-martin/",
+  "display": "standalone",
+  "background_color": "#0D0D1A",
+  "theme_color": "#E03131",
+  "icons": [
+    { "src": "android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "android-chrome-512x512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
